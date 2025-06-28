@@ -1,0 +1,155 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Exercise
+{
+    class Program
+    {
+        public class ListNode
+        {
+            public int val;
+            public ListNode next;
+
+            public ListNode(int val = 0, ListNode next = null)
+            {
+                this.val = val;
+                this.next = next;
+            }
+        }
+
+        public static ListNode end_return(ListNode node)
+        {
+            while (node.next != null)
+            {
+                node = node.next;
+            }
+            return node;
+        }
+
+        public static void del_end(ListNode node)
+        {
+            if (node == null || node.next == null)
+                return;
+
+            while (node.next.next != null)
+            {
+                node = node.next;
+            }
+
+            node.next = null;
+        }
+
+        public static ListNode reverseNode(ListNode node)
+        {
+            if (node == null) return null;
+
+            ListNode reversed = new ListNode(end_return(node).val, null);
+            del_end(node);
+            ListNode reversed_Continue = reversed;
+
+            while (node.next != null)
+            {
+                reversed_Continue.next = new ListNode(end_return(node).val, null);
+                reversed_Continue = reversed_Continue.next;
+                del_end(node);
+            }
+
+            reversed_Continue.next = new ListNode(node.val, null);
+
+            return reversed;
+        }
+
+        public static void PrintNode(ListNode node)
+        {
+            while (node != null)
+            {
+                Console.WriteLine(node.val);
+                node = node.next;
+            }
+        }
+
+        public static int NodeToNum(ListNode node)
+        {
+            int num = 0;
+            while (node != null)
+            {
+                num += node.val;
+                num = num * 10;
+                node = node.next;
+            }
+            num = num / 10;
+            return num;
+        }
+
+        public static int reverseNum(int num)
+        {
+            int y = 0;
+            int x;
+            while (num > 0)
+            {
+                x = num % 10;
+                y = y * 10 + x;
+                num /= 10;
+            }
+            return y;
+        }
+
+        public static ListNode numToNode(int num)
+        {
+            ListNode node = null;
+            ListNode final_node = new ListNode(0, null);
+            bool first = true;
+            while (num > 0)
+            {
+                if (node == null && first == true)
+                {
+                    node = new ListNode((num % 10), null);
+                    final_node.next = node;
+                    first = false;
+                }
+                else
+                {
+                    node.next = new ListNode(num % 10, null);
+                    node = node.next;
+                }
+                num = num / 10;
+            }
+            final_node = final_node.next;
+            return final_node;
+        }
+        
+
+        public static ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        {
+            l1 = reverseNode(l1);
+            l2 = reverseNode(l2);
+            int num1 = NodeToNum(l1);
+            int num2 = NodeToNum(l2);
+            int result = num1 + num2;
+            if (result == 0) { return new ListNode(0, null); }
+            result = reverseNum(result);
+            return reverseNode(numToNode(result));
+        }
+
+        static void Main(string[] args)
+        {
+            //ListNode three1 = new ListNode(4, null);
+            //ListNode two1 = new ListNode(6, three1);
+            //ListNode one1 = new ListNode(5, two1);
+
+            //ListNode three = new ListNode(3, null);
+            //ListNode two = new ListNode(4, three);
+            //ListNode one = new ListNode(2, two);
+            ListNode one = new ListNode(0, null);
+            ListNode one1 = new ListNode(0, null);
+
+            PrintNode(AddTwoNumbers(one, one1));
+
+            Console.ReadKey();
+        }
+    }
+}
